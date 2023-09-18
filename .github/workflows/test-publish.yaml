@@ -1,4 +1,10 @@
-on: [push]
+on: 
+  push:
+    branches:
+      - master
+    paths:
+      - "**.yaml"
+      - "**.yml"
 
 jobs:
   main:
@@ -43,10 +49,19 @@ jobs:
           chmod +x argo-linux-amd64
           ./argo-linux-amd64 version
 
+      - name: Get changed Files
+        id: changed-files
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+        run: |
+          git diff --name-only ${{ github.event.before }} ${{ github.event.after }}
+
       - name: Submit workflow
         run: |
-          echo $PWD
-          ./argo-linux-amd64 submit --from wftmpl/publish-copy -n argo -f ./argo-submits/test-params.yaml --generate-name test-mdavidson-gh-action-
+          for file in ${{ steps.changed-files.outputs.changed_files }}; do
+            ./argo-linux-amd64 submit --from wftmpl/publish-copy -n argo -f $file --generate-name test-mdavidson-gh-action-
+          done
 
       - name: test argo outputs
         run: echo "Argo URL $WORKFLOW_URL"
