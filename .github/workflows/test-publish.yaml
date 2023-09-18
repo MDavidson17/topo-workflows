@@ -26,27 +26,27 @@ jobs:
         with:
           version: "latest"
 
-      - name: AWS Configure
-        uses: aws-actions/configure-aws-credentials@v1.6.1
-        with:
-          aws-region: ap-southeast-2
-          mask-aws-account-id: true
-          role-to-assume: ${{ secrets.AWS_CI_ROLE }}
+      # - name: AWS Configure
+      #   uses: aws-actions/configure-aws-credentials@v1.6.1
+      #   with:
+      #     aws-region: ap-southeast-2
+      #     mask-aws-account-id: true
+      #     role-to-assume: ${{ secrets.AWS_CI_ROLE }}
 
-      - name: Login to EKS
-        run: |
-          aws eks update-kubeconfig --name Workflow --region ap-southeast-2 --role-arn ${{ secrets.AWS_EKS_ROLE }}
+      # - name: Login to EKS
+      #   run: |
+      #     aws eks update-kubeconfig --name Workflow --region ap-southeast-2 --role-arn ${{ secrets.AWS_EKS_ROLE }}
 
-      - name: Check EKS connection
-        run: |
-          kubectl get nodes
+      # - name: Check EKS connection
+      #   run: |
+      #     kubectl get nodes
 
-      - name: Install Argo
-        run: |
-          curl -sLO https://github.com/argoproj/argo-workflows/releases/download/v3.4.0-rc2/argo-linux-amd64.gz
-          gunzip argo-linux-amd64.gz
-          chmod +x argo-linux-amd64
-          ./argo-linux-amd64 version
+      # - name: Install Argo
+      #   run: |
+      #     curl -sLO https://github.com/argoproj/argo-workflows/releases/download/v3.4.0-rc2/argo-linux-amd64.gz
+      #     gunzip argo-linux-amd64.gz
+      #     chmod +x argo-linux-amd64
+      #     ./argo-linux-amd64 version
 
       - name: Get changed Files
         id: changed-files
@@ -59,10 +59,11 @@ jobs:
       - name: Submit workflow
         run: |
           for file in ${{ steps.changed-files.outputs.changed_files }}; do
-            ./argo-linux-amd64 submit --from wftmpl/publish-copy -n argo -f $file --generate-name test-mdavidson-gh-action-
+            echo $file
+            # ./argo-linux-amd64 submit --from wftmpl/publish-copy -n argo -f $file --generate-name test-mdavidson-gh-action-
           done
 
-      - name: test argo outputs
-        run: echo "Argo URL $WORKFLOW_URL"
-        env:
-          WORKFLOW_URL: ${{ steps.argo.outputs.WORKFLOW_URL }}
+      # - name: test argo outputs
+      #   run: echo "Argo URL $WORKFLOW_URL"
+      #   env:
+      #     WORKFLOW_URL: ${{ steps.argo.outputs.WORKFLOW_URL }}
