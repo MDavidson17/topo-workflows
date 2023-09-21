@@ -11,7 +11,7 @@ on:
 
 jobs:
   main:
-    if: ${{ github.event.pull_request.merged == true }} && ${{gthub.event.label.name == 'publish-odr*'}}
+    if: ${{ github.event.pull_request.merged == true }} && ${{github.event.label.name == 'publish-odr*'}}
     runs-on: ubuntu-latest
     permissions:
       id-token: write
