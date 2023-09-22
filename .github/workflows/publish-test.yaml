@@ -74,7 +74,7 @@ jobs:
         # if: ${{ github.event.label.name == 'publish-odr-added-only'}}
         id: added-files
         run: |
-          git diff --name-status ${{ github.event.pull_request.base.rfa }} ${{ github.event.pull_request.base.sha }} | grep ^A
+          git diff --name-only ${{ github.event.pull_request.base.rfa }} ${{ github.event.pull_request.base.sha }} -diff-filter=cdmrtuxb
           echo "added_files=$(git diff --name-status ${{ github.event.before }} ${{ github.event.after }} | grep ^A)" >> $GITHUB_OUTPUT
 
       # - name: Submit Added Workflow(s) Only
