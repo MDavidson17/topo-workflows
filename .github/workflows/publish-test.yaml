@@ -11,7 +11,7 @@ on:
 
 jobs:
   main:
-    if: ${{ github.event.pull_request.merged == true }} && ${{github.event.label.name == 'publish-odr*'}}
+    if: ${{ github.event.pull_request.merged == true }} #&& ${{github.event.label.name == 'publish-odr*'}}
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -74,7 +74,7 @@ jobs:
         # if: ${{ github.event.label.name == 'publish-odr-added-only'}}
         id: added-files
         run: |
-          git diff --name-status ${{ github.event.before }} ${{ github.event.after }} | grep ^A
+          git diff --name-status ${{ github.event.pull_request.base.rfa }} ${{ github.event.pull_request.base.sha }} | grep ^A
           echo "added_files=$(git diff --name-status ${{ github.event.before }} ${{ github.event.after }} | grep ^A)" >> $GITHUB_OUTPUT
 
       # - name: Submit Added Workflow(s) Only
